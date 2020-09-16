@@ -1,0 +1,108 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+  <changeSet id="api-change-001" author="developer">
+    <createTable tableName="role" schemaName="public">
+      <column name="role_id" type="UUID">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="role_name" type="VARCHAR(30)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_at" type="DATETIME" defaultValueComputed="now()">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_at" type="DATETIME" defaultValue="NULL"/>
+    </createTable>
+    <rollback>
+      <dropTable tableName="role"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="api-change-002" author="developer">
+    <createTable tableName="user" schemaName="public">
+      <column name="user_id" type="UUID">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="username" type="VARCHAR(150)">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="password_hash" type="VARCHAR(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="created_at" type="DATETIME" defaultValueComputed="now()">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_at" type="DATETIME" defaultValue="NULL"/>
+    </createTable>
+    <rollback>
+      <dropTable tableName="user"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="api-change-003" author="developer">
+    <createTable tableName="user_role" schemaName="public">
+      <column name="user_id" type="UUID">
+        <constraints nullable="false"/>
+
+      </column>
+      <column name="role_id" type="UUID">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <rollback>
+      <dropTable tableName="user_role"/>
+    </rollback>
+  </changeSet>
+
+  <changeSet id="api-change-004" author="developer">
+    <addForeignKeyConstraint baseColumnNames="user_id"
+                             baseTableName="user_role"
+                             baseTableSchemaName="public"
+                             constraintName="fk_user"
+                             deferrable="true"
+                             initiallyDeferred="true"
+                             onDelete="CASCADE"
+                             onUpdate="RESTRICT"
+                             referencedColumnNames="user_id"
+                             referencedTableName="user"
+                             referencedTableSchemaName="public"
+                             validate="true"/>
+  </changeSet>
+
+  <changeSet id="api-change-005" author="developer">
+    <addForeignKeyConstraint baseColumnNames="role_id"
+                             baseTableName="user_role"
+                             baseTableSchemaName="public"
+                             constraintName="fk_role"
+                             deferrable="true"
+                             initiallyDeferred="true"
+                             onDelete="CASCADE"
+                             onUpdate="RESTRICT"
+                             referencedColumnNames="role_id"
+                             referencedTableName="role"
+                             referencedTableSchemaName="public"
+                             validate="true"/>
+  </changeSet>
+
+  <changeSet id="api-change-006" author="developer">
+    <insert tableName="role" schemaName="public">
+      <column name="role_id" valueComputed="uuid_generate_v4()"/>
+      <column name="role_name" value="ROLE_USER"/>
+      <column name="created_at" valueComputed="now()"/>
+    </insert>
+    <insert tableName="role" schemaName="public">
+      <column name="role_id" valueComputed="uuid_generate_v4()"/>
+      <column name="role_name" value="ROLE_ADMIN"/>
+      <column name="created_at" valueComputed="now()"/>
+    </insert>
+    <insert tableName="role" schemaName="public">
+      <column name="role_id" valueComputed="uuid_generate_v4()"/>
+      <column name="role_name" value="ROLE_MODERATOR"/>
+      <column name="created_at" valueComputed="now()"/>
+    </insert>
+  </changeSet>
+
+</databaseChangeLog>

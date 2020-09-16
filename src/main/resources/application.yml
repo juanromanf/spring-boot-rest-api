@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
+    property-naming-strategy: LOWER_CAMEL_CASE
+    deserialization:
+      FAIL_ON_UNKNOWN_PROPERTIES: true
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/apidb
+    username: postgres
+    password: p0stgres
+
+  liquibase.enabled: true
+  liquibase.change-log: classpath:db/changelog/db.changelog-master.xml
+
+  jpa:
+    open-in-view: false
+    hibernate.ddl-auto: none
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
+app:
+  jwt:
+    secret: 4piS3cr3tK3Y
+    expiration-secs: 3600
